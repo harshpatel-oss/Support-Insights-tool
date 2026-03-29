@@ -41,12 +41,20 @@ export default function Upload({onFile}) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
       >
-        <h2>Upload CSV File</h2>
+        <div style={{textAlign: 'center', marginBottom: '24px'}}>
+          <h1 style={{fontSize: '2.5rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '8px'}}>
+            📊 Ticket Analytics Dashboard
+          </h1>
+          <p style={{fontSize: '1.1rem', color: '#6b7280'}}>
+            Transform your support data into actionable insights
+          </p>
+        </div>
+        <h2>Support Insights</h2>
         <p style={{color: '#64748b', marginBottom: '16px'}}>
           Drag & drop your ticket data file here, or click to browse
         </p>
         <p style={{fontSize: '14px', color: '#94a3b8', marginBottom: '20px'}}>
-          Supports CSV files with ticket data
+          upload CSV files with ticket data
         </p>
         <input
           type="file"
