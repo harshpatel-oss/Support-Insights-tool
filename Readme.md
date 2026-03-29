@@ -8,7 +8,15 @@ A modern, interactive web application for analyzing and visualizing customer sup
 
 ---
 
-## 🎯 Features
+## � Live Demo
+
+**Try it now:** [https://ticket-analytics.netlify.app](https://ticket-analytics.netlify.app)
+
+Upload a sample CSV file to see the analytics dashboard in action!
+
+---
+
+## �🎯 Features
 
 - **📤 Drag & Drop File Upload** - Easily upload CSV files with drag-and-drop or file browser
 - **📊 Interactive Analytics Dashboard** - Real-time visualization of ticket data with beautiful charts
