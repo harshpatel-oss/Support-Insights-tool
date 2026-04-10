@@ -1,88 +1,113 @@
-import Charts from "./Charts";
-import Table from "./Table";
-import Summary from "./Summary";
+import { useState, useMemo } from 'react';
+import Charts from './Charts';
+import Table from './Table';
+import Summary from './Summary';
+import Filters from './Filters';
+import { filterTickets, exportToCSV } from '../utils/processor';
 
-export default function Dashboard({stats}){
+export default function Dashboard({ stats }) {
+  const [filters, setFilters] = useState({ category: '', priority: '', search: '' });
+
+  const filteredTickets = useMemo(() => {
+    return filterTickets(stats.unresolvedTickets, filters);
+  }, [stats.unresolvedTickets, filters]);
+
+  const handleExport = () => {
+    exportToCSV(filteredTickets);
+  };
+
   return (
-    <div>
-      <div className="header">
-        <h1 className="title">Ticket Analytics Dashboard</h1>
-        <p className="subtitle">Analyze and manage customer support tickets</p>
-      </div>
-
-      {/* Key Metrics */}
-      <div className="grid grid-4">
-        <div className="metric">
-          <span className="metric-value">{stats.total}</span>
-          <span className="metric-label">Total Tickets</span>
-        </div>
-        <div className="metric">
-          <span className="metric-value">{stats.unresolved.length}</span>
-          <span className="metric-label">Unresolved</span>
-        </div>
-        <div className="metric">
-          <span className="metric-value">{stats.resolutionRate}%</span>
-          <span className="metric-label">Resolution Rate</span>
-        </div>
-        <div className="metric">
-          <span className="metric-value">{stats.priorityCount?.high || 0}</span>
-          <span className="metric-label">High Priority</span>
+    <div className="dashboard">
+      <div className="sidebar">
+        <Summary stats={stats} />
+        <div style={{ marginTop: '24px' }}>
+          <button className="btn" onClick={handleExport} style={{ width: '100%' }}>
+            📥 Download Unresolved Tickets
+          </button>
         </div>
       </div>
 
-      {/* Charts */}
-      <div className="card">
-        <h3>📊 Issue Categories</h3>
-        <Charts data={stats}/>
-      </div>
-
-      {/* Unresolved Tickets */}
-      <div className="card">
-        <h3>📋 Unresolved Tickets {stats.unresolved.length > 10 ? '(Top 10)' : ''}</h3>
-        <Table data={stats}/>
-      </div>
-
-      {/* Key Insights */}
-      <div className="grid grid-2">
-        <div className="card">
-          <h3>🎯 Key Insights</h3>
-          <div style={{lineHeight: '1.6'}}>
-            <p><strong>Top Category:</strong> {stats.topCat ? stats.topCat[0] : 'N/A'}</p>
-            <p><strong>Top Product:</strong> {stats.topProd}</p>
-            <p><strong>Unresolved Rate:</strong> {stats.unresPct}%</p>
-            <p><strong>High Priority:</strong> {stats.priorityCount?.high || 0} tickets</p>
-          </div>
-        </div>
-
-        <div className="card">
-          <h3>📈 Priority Breakdown</h3>
-          <div style={{display: 'flex', gap: '12px', flexWrap: 'wrap'}}>
-            <span className="badge high">High: {stats.priorityCount?.high || 0}</span>
-            <span className="badge medium">Medium: {stats.priorityCount?.medium || 0}</span>
-            <span className="badge low">Low: {stats.priorityCount?.low || 0}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Top Products */}
-      <div className="card">
-        <h3>📦 Top Problematic Products</h3>
-        <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px'}}>
-          {stats.topProducts.slice(0, 6).map((prod, i) => (
-            <div key={i} style={{
-              padding: '12px',
-              background: '#f8fafc',
-              borderRadius: '6px',
-              border: '1px solid #e2e8f0'
-            }}>
-              <div style={{fontWeight: '600', marginBottom: '4px'}}>{prod.name}</div>
-              <div style={{color: '#64748b', fontSize: '14px'}}>{prod.count} issues</div>
+      <div className="main-content">
+        {/* Anomaly Alert */}
+        {stats.anomalies && stats.anomalies.length > 0 && (
+          <div className="anomaly-alert">
+            <span className="anomaly-icon">⚠️</span>
+            <div>
+              <strong>Unusual spike detected on:</strong> {stats.anomalies.join(', ')}
             </div>
-          ))}
+          </div>
+        )}
+
+        {/* Metrics Cards */}
+        <div className="metrics-grid">
+          <div className="metric-card">
+            <div className="metric-icon">🎫</div>
+            <div className="metric-value">{stats.totalTickets}</div>
+            <div className="metric-label">Total Tickets</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-icon">⏳</div>
+            <div className="metric-value">{stats.unresolvedCount}</div>
+            <div className="metric-label">Unresolved</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-icon">✅</div>
+            <div className="metric-value">{stats.resolutionRate}%</div>
+            <div className="metric-label">Resolution Rate</div>
+          </div>
+          <div className="metric-card">
+            <div className="metric-icon">🚨</div>
+            <div className="metric-value">{stats.topCategory}</div>
+            <div className="metric-label">Top Issue Category</div>
+          </div>
+        </div>
+
+        {/* Charts */}
+        <Charts stats={stats} />
+
+        {/* Filters */}
+        <Filters filters={filters} onFiltersChange={setFilters} stats={stats} />
+
+        {/* Unresolved Tickets Table */}
+        <div className="table-container">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Ticket ID</th>
+                <th>Customer</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Priority</th>
+                <th>Stuck Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTickets.map((ticket, index) => (
+                <tr key={index}>
+                  <td>{ticket['Ticket ID']}</td>
+                  <td>{ticket['Customer Name']}</td>
+                  <td>{ticket.Product}</td>
+                  <td>
+                    <span className="category-tag">{ticket.Category}</span>
+                  </td>
+                  <td>
+                    <span className={`priority-badge priority-${ticket.normalizedPriority}`}>
+                      {ticket.Priority}
+                    </span>
+                  </td>
+                  <td>{ticket.stuckReason}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {filteredTickets.length === 0 && (
+            <div className="empty-state">
+              <div className="empty-icon">📋</div>
+              <p>No tickets match the current filters</p>
+            </div>
+          )}
         </div>
       </div>
-
-      <Summary text={stats.summary}/>
     </div>
   );
 }

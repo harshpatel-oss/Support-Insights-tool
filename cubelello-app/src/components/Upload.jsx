@@ -1,76 +1,68 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-export default function Upload({onFile}) {
+export default function Upload({ onFile }) {
   const [dragOver, setDragOver] = useState(false);
-  const [fileName, setFileName] = useState(null);
 
   const handleDrop = (e) => {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file && (file.type === "text/csv" || file.name.toLowerCase().endsWith('.csv'))) {
-      setFileName(file.name);
-      onFile(file);
-    } else {
-      alert("Please upload a valid CSV file");
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      handleFile(files[0]);
     }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragOver(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragOver(false);
   };
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFileName(file.name);
-      onFile(file);
+      handleFile(file);
     }
   };
 
+  const handleFile = (file) => {
+    if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+      alert('Please select a CSV file');
+      return;
+    }
+    onFile(file);
+  };
+
   return (
-    <div className="card" style={{maxWidth: '600px', margin: '40px auto'}}>
+    <div className="card">
+      <h2 style={{ textAlign: 'center', marginBottom: '24px', color: '#1a202c' }}>
+        📊 Support Insights Dashboard
+      </h2>
       <div
-        className={`upload-box ${dragOver ? 'drag-over' : ''}`}
+        className={`upload-area ${dragOver ? 'dragover' : ''}`}
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onClick={() => document.getElementById('file-input').click()}
       >
-        <div style={{textAlign: 'center', marginBottom: '24px'}}>
-          <h1 style={{fontSize: '2.5rem', fontWeight: 'bold', color: '#1f2937', marginBottom: '8px'}}>
-            📊 Ticket Analytics Dashboard
-          </h1>
-          <p style={{fontSize: '1.1rem', color: '#6b7280'}}>
-            Transform your support data into actionable insights
-          </p>
-        </div>
-        <h2>Support Insights</h2>
-        <p style={{color: '#64748b', marginBottom: '16px'}}>
-          Drag & drop your ticket data file here, or click to browse
-        </p>
-        <p style={{fontSize: '14px', color: '#94a3b8', marginBottom: '20px'}}>
-          upload CSV files with ticket data
-        </p>
+        <div className="upload-icon">📁</div>
+        <h3>Drop your CSV file here</h3>
+        <p>or click to browse</p>
         <input
+          id="file-input"
           type="file"
           accept=".csv"
           onChange={handleFileSelect}
-          style={{display: 'none'}}
-          id="file-input"
+          style={{ display: 'none' }}
         />
-        <label htmlFor="file-input" className="btn">
-          Choose File
-        </label>
-        {fileName && (
-          <p style={{marginTop: '12px', fontSize: '14px', color: '#059669'}}>
-            Selected: {fileName}
-          </p>
-        )}
+      </div>
+      <div style={{ textAlign: 'center', color: '#718096', fontSize: '14px' }}>
+        <div style={{ marginBottom: '8px' }}>
+          <strong>Required columns:</strong> Ticket ID, Date, Customer Name, Product, Issue Description, Priority
+        </div>
+        <div style={{ marginBottom: '8px' }}>
+          <strong>Optional columns:</strong> Category (will default to "other" if missing), Status (will default to "open" if missing)
+        </div>
+        <div style={{ fontSize: '12px', color: '#a0aec0' }}>
+          Make sure all cells in required columns have data. Supported date formats: YYYY-MM-DD, DD-MM-YYYY, MM/DD/YYYY, DD/MM/YYYY.
+        </div>
       </div>
     </div>
   );

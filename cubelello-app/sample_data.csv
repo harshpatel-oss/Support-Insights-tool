@@ -1,0 +1,9 @@
+Ticket ID,Date,Customer Name,Product,Issue Description,Category,Status,Priority
+T001,2024-01-01,John Doe,Widget A,Product stopped working,product issue,open,high
+T002,2024-01-02,Jane Smith,Widget B,Delivery delayed,delivery issue,open,medium
+T003,2024-01-03,Bob Johnson,Widget A,Wrong item received,order issue,closed,low
+T004,2024-01-04,Alice Brown,Widget C,Refund not processed,refund,open,high
+T005,2024-01-05,Charlie Wilson,Widget B,Damaged on arrival,damaged,open,medium
+T006,2024-01-06,Diana Prince,Widget A,General inquiry,other,closed,low
+T007,2024-01-07,Eve Adams,Widget C,Product defect,product issue,open,high
+T008,2024-01-08,Frank Miller,Widget B,Shipping issue,delivery issue,closed,medium
