@@ -1,59 +1,49 @@
 # Ticket Analytics Dashboard
 
-A modern, interactive web application for analyzing and visualizing customer support ticket data. Upload CSV files containing ticket information and instantly get actionable insights through charts, metrics, and comprehensive analytics.
+A modern, interactive React + Vite application for analyzing and visualizing customer support ticket data. Upload CSV files containing ticket information and instantly get actionable insights through charts, metrics, and an analytics dashboard.
 
 ![React](https://img.shields.io/badge/React-19.2-blue?logo=react)
 ![Vite](https://img.shields.io/badge/Vite-8.0-purple?logo=vite)
-![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## � Live Demo
+## Live Demo
 
-**Try it now:** [https://ticket-analytics.netlify.app](https://ticket-analytics.netlify.app)
+**Try it now:** https://ticket-analytics.netlify.app
 
 Upload a sample CSV file to see the analytics dashboard in action!
 
 ---
 
-## �🎯 Features
+## 🎯 Features
 
-- **📤 Drag & Drop File Upload** - Easily upload CSV files with drag-and-drop or file browser
-- **📊 Interactive Analytics Dashboard** - Real-time visualization of ticket data with beautiful charts
-- **📈 Key Metrics** - Display essential KPIs:
-  - Total tickets count
-  - Unresolved tickets
-  - Resolution rate percentage
-  - High priority tickets
-- **📋 Data Visualization** - Charts showing issue categories and their distribution
-- **🔍 Detailed Table View** - Browse top unresolved tickets with full details
-- **💡 Smart Insights** - Automated analysis highlighting:
-  - Top issue categories
-  - Common problems
-  - Average resolution insights
-- **⚡ Fast Processing** - CSV parsing and data processing with loading indicators
-- **✅ Error Handling** - Clear error messages and recovery options
-- **🎨 Responsive Design** - Works seamlessly on desktop, tablet, and mobile devices
+- **CSV Upload** - Upload ticket data via drag-and-drop or file picker.
+- **Data Validation** - Validates required columns and formats dates reliably.
+- **Automatic Normalization** - Normalizes category, status, and priority values.
+- **Dashboard Visuals** - Displays KPI cards, category charts, and trend charts.
+- **Unresolved Tickets Table** - Shows open tickets and automatically generated stuck reasons.
+- **Filtering** - Filter tickets by category, priority, and keyword search.
+- **Error Handling** - Displays helpful errors for invalid files or missing data.
+- **Responsive Design** - Works well across desktop and mobile.
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend Framework**: [React](https://react.dev/) 19.2.4
-- **Build Tool**: [Vite](https://vitejs.dev/) 8.0.1
-- **Charting Library**: [Recharts](https://recharts.org/) 3.8.1
-- **Styling**: CSS with responsive grid layout
-- **Linting**: ESLint with React plugins
-- **Node Version**: 16+ recommended
+- **Frontend Framework**: React 19.2.4
+- **Build Tool**: Vite 8.0.1
+- **Charting Library**: Recharts 3.8.1
+- **Linting**: ESLint
+- **Styling**: CSS
+- **Recommended Node Version**: 16+
 
 ---
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following installed:
-- Node.js (v16 or higher)
+- Node.js v16 or higher
 - npm or yarn package manager
-- A modern web browser
+- Modern web browser
 
 ---
 
@@ -74,29 +64,21 @@ Install dependencies:
 npm install
 ```
 
-### 2. Development Server
-
-Start the development server:
+### 2. Run Development Server
 
 ```bash
 npm run dev
 ```
 
-The application will be available at `http://localhost:5173` (or the port specified in your terminal).
+Open `http://localhost:5173` in your browser.
 
 ### 3. Build for Production
-
-Create an optimized production build:
 
 ```bash
 npm run build
 ```
 
-The build output will be in the `dist/` directory.
-
 ### 4. Preview Production Build
-
-Preview the production build locally:
 
 ```bash
 npm run preview
@@ -108,51 +90,66 @@ npm run preview
 
 ```
 cubelello-app/
-├── public/                 # Static assets
+├── public/                    # Static assets
 ├── src/
-│   ├── components/        # React components
-│   │   ├── Dashboard.jsx  # Main dashboard container
-│   │   ├── Charts.jsx     # Data visualization charts
-│   │   ├── Table.jsx      # Unresolved tickets table
-│   │   ├── Summary.jsx    # Key insights summary
-│   │   └── Upload.jsx     # File upload component
-│   ├── App.jsx            # Root component
-│   ├── App.css            # App styling
-│   ├── index.css          # Global styles
-│   ├── main.jsx           # Entry point
-│   └── utils.js           # Utility functions (CSV parsing, data processing)
-├── vite.config.js         # Vite configuration
-├── eslint.config.js       # ESLint configuration
-├── index.html             # HTML template
-└── package.json           # Project dependencies
+│   ├── components/            # React components
+│   │   ├── Dashboard.jsx
+│   │   ├── Charts.jsx
+│   │   ├── Table.jsx
+│   │   ├── Summary.jsx
+│   │   ├── Upload.jsx
+│   │   ├── Filters.jsx
+│   │   └── ErrorBoundary.jsx
+│   ├── styles/
+│   │   └── main.css
+│   ├── utils/
+│   │   ├── constants.js
+│   │   ├── parser.js
+│   │   └── processor.js
+│   ├── App.jsx
+│   ├── App.css
+│   ├── index.css
+│   └── main.jsx
+├── vite.config.js
+├── eslint.config.js
+├── index.html
+└── package.json
 ```
 
 ---
 
 ## 📊 CSV File Format
 
-The application expects CSV files with the following columns:
+The application expects CSV files with these columns:
 
-| Column | Description | Example |
-|--------|-------------|---------|
-| **Ticket ID** | Unique identifier | `TICK001` |
-| **Date** | Ticket date | `2024-01-15` |
-| **Customer Name** | Customer name | `John Doe` |
-| **Product** | Product related to issue | `Widget Pro` |
-| **Issue Description** | Detailed issue | `Button not working` |
-| **Category** | Issue category | `product issue`, `delivery issue`, `order issue`, `refund/replacement`, `damaged product`, `other` |
-| **Status** | Ticket status | `Open`, `Resolved`, `In Progress` |
-| **Priority** | Priority level | `high`, `medium`, `low` |
+| Column | Required | Description |
+|--------|----------|-------------|
+| Ticket ID | Yes | Unique ticket identifier |
+| Date | Yes | Ticket date |
+| Customer Name | Yes | Customer name |
+| Product | Yes | Product or service |
+| Issue Description | Yes | Issue details |
+| Priority | Yes | `high`, `medium`, `low` |
+| Category | No | Optional issue category |
+| Status | No | Optional ticket status |
 
-### Supported Category Mappings
+### Notes
 
-The application automatically maps common category variations:
-- **Product Issues**: `quality`, `defect`
-- **Delivery Issues**: `delivery`, `shipping`
-- **Order Issues**: `wrong item`, `missing item`
-- **Refund/Replacement**: `refund`, `replacement`
-- **Damaged Products**: `damaged`, `damaged product`
-- **Other**: Any uncategorized issues
+- `Category` and `Status` are optional.
+- Missing `Category` defaults to `Other`.
+- Missing `Status` defaults to `Open`.
+- Supported date formats: `YYYY-MM-DD`, `DD-MM-YYYY`, `MM/DD/YYYY`, `DD/MM/YYYY`.
+
+### Category Mapping
+
+The app normalizes many common category values into these buckets:
+
+- **Delivery**: `delivery`, `delivery issue`, `shipping`, `shipping issue`, `logistic`
+- **Product**: `product`, `product issue`, `quality`, `defect`, `broken`, `technical`
+- **Order**: `order`, `order issue`, `wrong item`, `missing item`, `billing`, `account`
+- **Refund**: `refund`, `replacement`, `return`, `cancel`, `payment`
+- **Damaged**: `damaged`, `damage`, `broken`
+- **Other**: all other values
 
 ### Sample CSV
 
@@ -167,76 +164,51 @@ TICK003,2024-01-13,Bob Wilson,Widget Pro,Wrong color received,wrong item,Resolve
 
 ## 🎮 Usage
 
-1. **Open the Application**
-   - Navigate to the running development server
-
-2. **Upload Your Data**
-   - Drag and drop a CSV file onto the upload area, or
-   - Click to browse and select a CSV file
-
-3. **View Analytics**
-   - The dashboard auto-loads with:
-     - Key metrics at the top
-     - Issue category charts
-     - Table of unresolved tickets
-     - Actionable insights
-
-4. **Upload New Data**
-   - Click "📤 Upload New File" to analyze another dataset
+1. Start the app with `npm run dev`.
+2. Upload a CSV file by dragging it onto the upload area or selecting it manually.
+3. Review the dashboard analytics:
+   - KPI cards for total tickets, unresolved tickets, resolution rate, and priority distribution
+   - Category and trend charts
+   - Unresolved ticket table with generated stuck reasons
+   - Filters for category, priority, and search
+4. Upload a new file to refresh the dashboard.
 
 ---
 
 ## 🔧 Available Scripts
 
 ```bash
-# Start development server with hot reload
 npm run dev
-
-# Build optimized production bundle
 npm run build
-
-# Preview production build
 npm run preview
-
-# Run ESLint to check code quality
 npm run lint
-
-# Fix ESLint issues automatically
-npm run lint -- --fix
 ```
 
 ---
 
 ## 📈 Data Processing
 
-The application processes CSV data through:
+The app processes CSV data through:
 
-1. **Parsing** - CSV string to row arrays
-2. **Validation** - Checks for required columns
-3. **Transformation**:
-   - Category normalization using mapping rules
-   - Status classification (resolved vs unresolved)
-   - Priority grouping
-   - Data aggregation
-4. **Analysis**:
-   - Calculate resolution rate
-   - Count tickets by priority, category, and status
-   - Generate summary statistics
+1. **Parsing** - CSV string to rows
+2. **Validation** - Required columns validation
+3. **Transformation** - Category/status/priority normalization and aggregation
+4. **Analysis** - Resolution rate, category counts, priority counts, and trend data
 
 ---
 
 ## 🎨 Styling
 
-The application uses a modern, professional design with:
+The app uses a clean, responsive design with:
 - Responsive grid layouts
-- Dark card-based interface
-- Color-coded metrics and indicators
-- Smooth transitions and hover effects
-- Mobile-friendly responsive design
+- Card-based UI
+- Color-coded metrics
+- Smooth hover effects
+- Mobile-friendly layout
 
 Customize styling in:
-- [App.css](./src/App.css) - Component styles
-- [index.css](./src/index.css) - Global styles
+- `src/App.css`
+- `src/index.css`
 
 ---
 
